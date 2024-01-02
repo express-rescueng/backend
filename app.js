@@ -1,29 +1,36 @@
+
+// app.js
 import express from 'express';
 import router from './api/v1/routes/routes.js';
 import bodyParser from 'body-parser';
 import session from 'express-session';
-import MongoStore from 'connect-mongo';
+import MySQLStore from 'express-mysql-session';
+import sequelize from './api/v1/middlewares/db.js'; // Import the Sequelize instance
 
 const app = express();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// Configure Express to use sessions
+
+// Configure Express to use sessions with MySQLStore
+const sessionStore = new MySQLStore({
+    checkExpirationInterval: 900000, // How often expired sessions will be cleared; milliseconds
+    expiration: 86400000, // The maximum age (in milliseconds) of a valid session
+}, sequelize);
+
 app.use(
     session({
         secret: 'secret key',
         resave: false,
         saveUninitialized: false,
-        store: MongoStore.create({
-            mongoUrl:
-                'mongodb+srv://oyedeleholaji84:Wordwide@cluster0.p0ujvth.mongodb.net/?retryWrites=true&w=majority',
-            collection: 'sessions',
-        }),
+        store: sessionStore,
     })
 );
-//mount routes
+
+// Mount routes
 app.use('/', router);
 
-//start server
-app.listen(3000, () => {
-    console.log('Server started on port 3000');
+// Start server
+app.listen(utils.port, () => {
+    console.log(`Server started on port ${utils.port}`);
 });
