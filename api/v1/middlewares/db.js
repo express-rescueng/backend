@@ -1,17 +1,13 @@
-import mongoose from 'mongoose';
+// db.js
+import { Sequelize } from 'sequelize';
 import utils from '../config/config.js';
 
-const uri = utils.dbUrl;
+const { dbUrl } = utils;
 
-// Replace <username>, <password>, and <dbname> with your values
-// const uri = 'mongodb+srv://<username>:<password>@<dbname>.mongodb.net/test?retryWrites=true&w=majority';
+const sequelize = new Sequelize(dbUrl);
 
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log('Connected to MongoDB Atlas'))
-    .catch((err) => console.error(err));
+sequelize.authenticate()
+    .then(() => console.log('Connected to MySQL database'))
+    .catch((err) => console.error('Unable to connect to the database:', err));
 
-const db = mongoose.connection;
-db.once("open", () => {
-    console.log("MongoDB connection ready!");
-});
-export default db;
+export default sequelize;
