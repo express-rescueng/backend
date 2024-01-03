@@ -1,79 +1,48 @@
-//user models db schema
-import mongoose from 'mongoose';
-import CryptoJS from 'crypto-js';
-import utils from '../config/config.js';
-import bcrypt from 'bcrypt';
+const Sequelize = require('sequelize');
+const bcrypt = require('bcrypt');
+const utils = require('../config/config')
+const sequelize = new Sequelize(utils.dbUrl, { dialect: 'mysql' }); // Specify the dialect (e.g., 'mysql')
 
-const Schema = mongoose.Schema;
-const sec_key = utils.sec_key;
-
-//user schema
-const UserSchema = new Schema({
+const User = sequelize.define('User', {
     firstName: {
-        type: String,
-        required: true
+        type: Sequelize.STRING,
+        allowNull: false,
     },
     lastName: {
-        type: String,
-        required: true
+        type: Sequelize.STRING,
+        allowNull: false,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
     },
     password: {
-        type: String,
-        required: true
+        type: Sequelize.STRING,
+        allowNull: false,
     },
     phone: {
-        type: Number,
-        required: true
+        type: Sequelize.INTEGER,
+        allowNull: false,
     },
     NIN: {
-        type: Number,
-        required: true
+        type: Sequelize.INTEGER,
+        allowNull: false,
     },
     profilePic: {
-        type: String,
-        required: false
+        type: Sequelize.STRING,
+        allowNull: true,
     },
-    verified: { type: Boolean, default: false, required: false },
-
-    date: { type: Date, default: Date.now } //default value
+    verified: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: true,
+    },
 });
 
-// Before saving the user, hash their password
-UserSchema.pre('save', function (next) {
-    const user = this;
-    bcrypt.hash(user.password, 10, function (err, hash) {
-        if (err) {
-            return next(err);
-        }
-        user.password = hash;
-        next();
-    });
+User.beforeCreate(async (user) => {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    user.password = hashedPassword;
 });
 
-// Static method to authenticate a user based on their phone and password
-UserSchema.statics.authenticate = function (email, password) {
-    return this.findOne({ email })
-        .then((user) => {
-            if (!user) {
-                throw new Error('User not found');
-            }
-            return bcrypt.compare(password, user.password).then((match) => {
-                if (!match) {
-                    throw new Error('Invalid password');
-                }
-                return user;
-            });
-        })
-        .catch((err) => {
-            return Promise.reject(err.message);
-        });
-};
-
-const User = mongoose.model('User', UserSchema);
-
-export default User;
+module.exports = User;

@@ -1,4 +1,5 @@
-import User from "../models/user.js";
+
+const User = require('../models/user.js');
 
 const uploadFile = async (req, res) => {
     console.log(req.session.user);
@@ -19,4 +20,4 @@ const uploadFile = async (req, res) => {
     });
     res.redirect('/home');
 };
-export default uploadFile;
+module.export = uploadFile;

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import User from '../models/user.js';
+const axios = require('axios');
+const User = require('../models/user.js');
 
 
 const verifyOtp = async (req, res) => {
@@ -59,4 +59,4 @@ const verifyOtp = async (req, res) => {
 
 
 };
-export default verifyOtp;
+module.export = verifyOtp;

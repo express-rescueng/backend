@@ -54,4 +54,4 @@ home.index = (req, res) => {
   res.send(html);
 };
 
-export default home;
+module.export = home;

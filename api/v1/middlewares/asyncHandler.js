@@ -18,7 +18,10 @@
  *      //do something here with try/catch
  * }
  *
- *****************************/
-export default (fn) => (req, res, next) => {
+ *****************************/// 
+
+const asyncHandler = (fn) => (req, res, next) => {
     fn(req, res, next).catch(next);
 };
+
+module.exports = asyncHandler; 

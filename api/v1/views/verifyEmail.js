@@ -23,4 +23,4 @@ dp.uploadFile = async (req, res) => {
   `;
     res.send(html);
 }
-export default dp;
+module.export = dp;

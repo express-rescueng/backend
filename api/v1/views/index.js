@@ -1,6 +1,4 @@
-import express from 'express';
-
-
+const express = require('express');
 const AppController = {};
 
 
@@ -73,4 +71,4 @@ AppController.auth = async (req, res) => {
   `;
   res.send(html);
 };
-export default AppController;
+module.export = AppController;

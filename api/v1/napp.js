@@ -3,10 +3,8 @@ import mongoose from 'mongoose';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 
-// Models
 import User from './models/nuser.js';
 
-// Connect to MongoDB Atlas
 mongoose.connect(
     'mongodb+srv://oyedeleholaji84:Wordwide@cluster0.p0ujvth.mongodb.net/?retryWrites=true&w=majority',
     { useNewUrlParser: true, useUnifiedTopology: true }
@@ -14,10 +12,8 @@ mongoose.connect(
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-// Create the Express app
 const app = express();
 
-// Configure Express to use JSON and URL-encoded request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
